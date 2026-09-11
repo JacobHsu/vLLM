@@ -1,7 +1,7 @@
 # vLLM 快速入門 — 本機實測記錄
 
 > 這份文件不是官方文件的完整翻譯,而是**在這台機器上實際操作、只保留真正用到的步驟**的紀錄,包含中途遇到的錯誤與實際解法。
-> 完整翻譯版請見:[vllm-quickstart-zh-tw.md](vllm-quickstart-zh-tw.md)
+> 完整翻譯版請見:[vLLM/quickstart.zh.md](vLLM/quickstart.zh.md)
 > 官方原文:[docs.vllm.ai — Quickstart](https://docs.vllm.ai/en/latest/getting_started/quickstart/)
 > 本文使用的所有腳本都存放在 [scripts/](scripts/) 目錄下。
 >

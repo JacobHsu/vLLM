@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p \"/d/1-study/vllm/.claude/skills/llm-eval-harness/scripts\" \"/d/1-study/vllm/.claude/skills/llm-eval-harness/references\" \"/d/1-study/vllm/.claude/skills/llm-eval-harness/assets\" *)",
+      "Bash(set -e)",
+      "Bash(curl -fsSL __TRACKED_VAR__/SKILL.md -o __TRACKED_VAR__/SKILL.md)",
+      "Bash(curl -fsSL __TRACKED_VAR__/scripts/availability_probe.py -o __TRACKED_VAR__/scripts/availability_probe.py)",
+      "Bash(curl -fsSL __TRACKED_VAR__/scripts/concurrency_probe.py -o __TRACKED_VAR__/scripts/concurrency_probe.py)",
+      "Bash(curl -fsSL __TRACKED_VAR__/scripts/fidelity_probe.py -o __TRACKED_VAR__/scripts/fidelity_probe.py)",
+      "WebFetch(domain:raw.githubusercontent.com)"
+    ],
+    "additionalDirectories": [
+      "D:\\1-study\\vllm\\.claude\\skills\\llm-eval-harness"
+    ]
+  }
+}
