@@ -15,7 +15,7 @@
 | ├─ [quickstart.zh.md](vLLM/quickstart.zh.md) | 官方 Quickstart 文件的完整翻譯,涵蓋所有平台(NVIDIA CUDA / AMD ROCm / Intel GPU / Google TPU / Ascend NPU / Apple Silicon) |
 | ├─ [configuration/engine_args.zh.md](vLLM/configuration/engine_args.zh.md) | Engine Arguments(啟動參數)實用子集翻譯,官方頁面自動生成、規模達 200+ 參數,只挑單 GPU 本機部署會用到的 |
 | └─ [features/quantization.zh.md](vLLM/features/quantization.zh.md) | Quantization(量化)索引頁翻譯,含硬體相容表;已實測驗證 Blackwell 相容性(見下) |
-| [quantization-benchmark.md](quantization-benchmark.md) | **量化實測紀錄**:1.5B / 7B(bf16)/ 7B(FP8)三個模型的實測對照,含 tok/s、VRAM、能否啟動 |
+| [quantization-benchmark.md](quantization-benchmark.md) | **量化實測紀錄**:1.5B / 7B(bf16)/ 7B(FP8)/ 8B(NVFP4)四個模型的實測對照,含 tok/s、VRAM、能否啟動;NVFP4 在這張卡上目前啟動失敗(上游 SM120 支援未完成) |
 | [.claude/skills/llm-eval-harness/](.claude/skills/llm-eval-harness/) | 從 [daymade/claude-code-skills](https://github.com/daymade/claude-code-skills)(MIT)複製的 skill,用來測 OpenAI-compatible 端點的可用性/速度/併發/品質 |
 
 ## 快速開始

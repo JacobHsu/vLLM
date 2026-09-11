@@ -55,7 +55,9 @@ vLLM 支援的量化格式:
 >
 > 實務上,Blackwell 要吃的是 **NVFP4**(NVIDIA 這代主推的 4-bit 浮點量化格式),走的是 [NVIDIA Model Optimizer](https://docs.vllm.ai/en/latest/features/quantization/modelopt.html) 或 llm-compressor 的路線,不在上面這張(舊版)表格涵蓋範圍內。
 >
-> **已經親自測過 FP8(llm-compressor W8A8)這條路線,結果是穩的**——詳見 [quantization-benchmark.md](../../quantization-benchmark.md):7B 模型不量化直接在這張 16GB 卡上啟動失敗(`No available memory for the cache blocks`),換成 FP8 量化版就正常跑起來,沒有遇到任何 Blackwell 專屬的相容性問題。NVFP4 還沒測,是下一步。
+> **已經親自測過 FP8 跟 NVFP4 這兩條路線,結果是「FP8 能用、NVFP4 目前不能用」**——詳見 [quantization-benchmark.md](../../quantization-benchmark.md):
+> - FP8(llm-compressor W8A8):7B 模型不量化直接在這張 16GB 卡上啟動失敗(`No available memory for the cache blocks`),換成 FP8 量化版就正常跑起來,沒有遇到任何 Blackwell 專屬的相容性問題。
+> - NVFP4:啟動失敗,原因是 vLLM/FlashInfer 對 SM120(消費級 Blackwell)的 NVFP4 GEMM kernel 支援目前確實還沒做完(有多個上游 issue 追蹤,不是設定錯誤)。
 
 > **備註**
 > Google TPU 上的量化支援,請參考 [TPU-Inference 支援的模型與功能](https://docs.vllm.ai/projects/tpu/en/latest/recommended_models_features/) 文件。
