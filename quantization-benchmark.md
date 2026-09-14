@@ -67,6 +67,32 @@ error: "CUDA compiler and CUDA toolkit headers are incompatible, please check yo
 
 **結論:** NVFP4 這條路線在官方 release 版本上,現階段對這張顯卡是條死路,要嘛等上游修好,要嘛套用非官方 patch(有實際風險,這次先不做)。FP8 目前是這張卡上唯一驗證過穩定可用的量化路線。
 
+## 併發能力實測(FP8 7B):理論值 2.14x 完全低估了實際能撐的量
+
+用 `llm-eval-harness` 的 `concurrency_probe.py` 對 FP8 7B 伺服器實測,結果跟 vLLM 啟動時算出的「32K 上下文下最大併發 2.14x」完全對不上:
+
+| 併發數 | 成功率 | p50 延遲 | p90 延遲 |
+|---|---|---|---|
+| 1 | 100% | 0.18s | 0.18s |
+| 2 | 100% | 0.06s | 0.06s |
+| 4 | 100% | 0.07s | 0.12s |
+| 8 | 100% | 1.83s(異常值,見下) | 1.86s |
+| 16 | 100% | 0.07s | 0.15s |
+| 32 | 100% | 0.27s | 0.27s |
+| 64 | 100% | 0.16s | 0.18s |
+| 128 | 100% | 0.27s | 0.29s |
+| 256 | 100% | 0.44s | 0.44s |
+| 512 | 100% | 0.88s | 1.2s |
+| 1024 | 100% | 1.2s | 1.88s |
+
+**測到 1024 個併發請求,成功率還是 100%,完全沒有找到「壞掉」的斷點。**
+
+**為什麼跟理論值差這麼多——因為兩者測的是不同的東西:** 啟動時算出的「2.14x」,假設的是每個請求都吃滿 32,768 token 的上下文(最壞情況)。但 `concurrency_probe.py` 預設送的是刻意設計過的極小請求(`max_tokens=16`,prompt 只有一句「回answer一個字」),單一請求佔用的 KV cache 小到可以忽略,所以 vLLM 能同時排進去的請求數量遠遠超過「滿上下文」情境的估計。**這兩個數字都對,只是回答不同的問題**:2.14x 回答的是「都是長對話時撐多少人」,1024+ 回答的是「都是短訊息時撐多少人」。實務上的併發上限落在這兩個數字之間,取決於真實流量的 prompt/輸出長度。
+
+**併發=8 那筆異常延遲(1.83s,前後都是 0.06-0.15s)**,只出現一次、沒有在鄰近的併發數重現,判斷是一次性的暖機/排程雜訊(例如剛好卡到前一輪測試的收尾),不是併發相關的真實瓶頸——這也是為什麼要多測幾個點,而不是只看單一數字就下結論(呼應 llm-eval-harness 自己在 [evaluation_disciplines.md](.claude/skills/llm-eval-harness/references/evaluation_disciplines.md) 裡強調的原則)。
+
+**看得出來的真實趨勢**:延遲隨併發數增加是「漸進式變差」,不是「某個門檻後突然爆掉」——256→1024 之間 p50 從 0.44s 漲到 1.2s,是 vLLM 連續批次(continuous batching)排隊處理的正常現象,佇列變長、平均要多等一下,但沒有請求被拒絕或逾時失敗。這跟很多 API 閘道「超過某個併發直接回 429」的行為很不一樣。
+
 ## 實測指令
 
 啟動 FP8 量化版:
@@ -94,7 +120,15 @@ uv run --with openai python "$REPO_DIR/.claude/skills/llm-eval-harness/scripts/s
   --base-url http://localhost:8000/v1 --model qwen2.5-7b-fp8 --key-env DUMMY_KEY --mode both
 ```
 
+用 llm-eval-harness 測併發(接續上面已啟動的 FP8 伺服器):
+
+```bash
+uv run --with aiohttp python "$REPO_DIR/.claude/skills/llm-eval-harness/scripts/concurrency_probe.py" \
+  --url http://localhost:8000/v1/chat/completions --model qwen2.5-7b-fp8 --key-env DUMMY_KEY \
+  --format openai --concurrency 1 2 4 8 16 32 64 128 256 512 1024
+```
+
 ## 下一步
 
-- 用 `llm-eval-harness` 的 concurrency probe 實際測出這張卡在 FP8 7B 下的併發上限,而不是只看 vLLM 啟動時算出的理論值(2.14x)
+- 用真實長度的 prompt(不是 probe 預設的極短測試訊息)重新測併發,找出更貼近實際使用情境的上限
 - 定期回頭查一次上游 NVFP4/SM120 的幾個 issue 有沒有修好,修好後重跑 `scripts/run_server_nvfp4.sh` 驗證

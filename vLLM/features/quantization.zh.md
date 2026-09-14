@@ -1,4 +1,4 @@
-# Quantization(量化)— 繁體中文翻譯
+# Quantization(量化)
 
 > 官方原文:[docs.vllm.ai — Quantization](https://docs.vllm.ai/en/latest/features/quantization/)
 > 本文翻譯了官方索引頁的核心內容(支援格式清單、硬體相容表)。頁尾「Out-of-Tree Quantization Plugins」是給要自己開發新量化方法的人看的開發者文件,不是部署使用者會用到的,這裡略過,有需要再查原文。

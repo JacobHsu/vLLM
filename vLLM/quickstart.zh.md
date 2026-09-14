@@ -1,7 +1,6 @@
 # 快速入門 (Quickstart)
 
-> 原文出處:[docs.vllm.ai — Quickstart](https://docs.vllm.ai/en/latest/getting_started/quickstart/)
-> 本文為繁體中文翻譯版,僅供個人學習參考,內容以官方原文為準。
+> 原文出處:[docs.vllm.ai — Quickstart](https://docs.vllm.ai/en/latest/getting_started/quickstart/),僅供個人學習參考,內容以官方原文為準。
 
 本指南將協助你快速上手 vLLM,完成以下兩件事:
 
