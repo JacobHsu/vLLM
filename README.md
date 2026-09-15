@@ -16,10 +16,12 @@
 | ├─ [configuration/engine_args.zh.md](vLLM/configuration/engine_args.zh.md) | Engine Arguments(啟動參數)實用子集翻譯,官方頁面自動生成、規模達 200+ 參數,只挑單 GPU 本機部署會用到的 |
 | ├─ [features/quantization.zh.md](vLLM/features/quantization.zh.md) | Quantization(量化)索引頁翻譯,含硬體相容表;已實測驗證 Blackwell 相容性(見下) |
 | ├─ [features/structured_outputs.zh.md](vLLM/features/structured_outputs.zh.md) | Structured Outputs(結構化輸出)完整翻譯:`choice`/`regex`/`json`/`grammar` 幾種模式,含線上服務、離線推論、搭配 reasoning 的用法 |
-| └─ [features/tool_calling.zh.md](vLLM/features/tool_calling.zh.md) | Tool Calling(工具呼叫)完整翻譯:含 20+ 家模型專屬 parser 對照表,Qwen 系列適用 `hermes` parser |
+| ├─ [features/tool_calling.zh.md](vLLM/features/tool_calling.zh.md) | Tool Calling(工具呼叫)完整翻譯:含 20+ 家模型專屬 parser 對照表,Qwen 系列適用 `hermes` parser |
+| └─ [design/prefix_caching.zh.md](vLLM/design/prefix_caching.zh.md) | Prefix Caching 設計文件完整翻譯,現行 v1 架構(資料結構、配置/釋放/驅逐流程、逐步範例) |
 | [quantization-benchmark.md](quantization-benchmark.md) | **量化實測紀錄**:1.5B / 7B(bf16)/ 7B(FP8)/ 8B(NVFP4)四個模型的實測對照,含 tok/s、VRAM、能否啟動;NVFP4 在這張卡上目前啟動失敗(上游 SM120 支援未完成) |
 | [structured-outputs-test.md](structured-outputs-test.md) | **Structured Outputs 實測紀錄**:`choice`/`regex`/`json`/`grammar` 四種模式全部測過,結果正常 |
 | [tool-calling-test.md](tool-calling-test.md) | **Tool Calling 實測紀錄**:`get_weather` 範例一次成功,跟官方文件輸出一致 |
+| [librechat-integration.md](librechat-integration.md) | **LibreChat 整合筆記**:這台 vLLM 被另一個獨立專案 LibreChat 當聊天後端呼叫,記錄連線架構、vLLM 端要配合的條件(監聽位址、背景啟動方式、tool-calling 參數)與目前驗證進度 |
 | [.claude/skills/llm-eval-harness/](.claude/skills/llm-eval-harness/) | 從 [daymade/claude-code-skills](https://github.com/daymade/claude-code-skills)(MIT)複製的 skill,用來測 OpenAI-compatible 端點的可用性/速度/併發/品質 |
 
 ## 快速開始
